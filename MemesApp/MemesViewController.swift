@@ -8,6 +8,8 @@
 import UIKit
 
 final class MemesViewController: UIViewController {
+    private let presenter: MemesPresenterProtocol
+
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.delegate = self
@@ -21,6 +23,7 @@ final class MemesViewController: UIViewController {
         let imageView = UIImageView()
         imageView.backgroundColor = .black
         imageView.layer.cornerRadius = 20
+        imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -56,17 +59,51 @@ final class MemesViewController: UIViewController {
         return button
     }()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupView()
-        setupConstraints()
-    }
+    init(presenter: MemesPresenterProtocol = MemesPresenter()) {
+         self.presenter = presenter
+         super.init(nibName: nil, bundle: nil)
+     }
+     
+     required init?(coder: NSCoder) {
+         fatalError("init(coder:) has not been implemented")
+     }
+     
+     override func viewDidLoad() {
+         super.viewDidLoad()
+         setupView()
+         setupConstraints()
+         presenter.setupView(self)
+         presenter.viewDidLoad()
+     }
 }
 
 
 // MARK: - UISearchBarDelegate
 extension MemesViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        presenter.searchTextChanged(searchText)
+    }
+}
+
+// MARK: - MemesViewProtocol
+extension MemesViewController: MemesViewProtocol {
+    func setMemeImage(_ image: UIImage) {
+        DispatchQueue.main.async {
+            self.memesView.image = image
+        }
+    }
     
+    func showError(_ message: String) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(
+                title: "Ошибка",
+                message: message,
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(alert, animated: true)
+        }
+    }
 }
 
 // MARK: - Private Methods
@@ -109,14 +146,14 @@ private extension MemesViewController {
     }
     
     @objc func getMemesButtonTapped() {
-        
+        presenter.getMemeTapped()
     }
     
     @objc func dislikeButtonTapped() {
-        
+        presenter.dislikeTapped()
     }
     
     @objc func likeButtonTapped() {
-        
+        presenter.likeTapped()
     }
 }
