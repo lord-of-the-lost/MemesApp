@@ -30,7 +30,7 @@ final class MemesPresenter: MemesPresenterProtocol {
     private var currentMeme: Meme?
     private var searchText: String = ""
     
-    init(networkService: NetworkServiceProtocol = NetworkService()) {
+    init(networkService: NetworkServiceProtocol) {
         self.networkService = networkService
     }
     

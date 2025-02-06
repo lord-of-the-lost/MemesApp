@@ -59,7 +59,7 @@ final class MemesViewController: UIViewController {
         return button
     }()
     
-    init(presenter: MemesPresenterProtocol = MemesPresenter()) {
+    init(presenter: MemesPresenterProtocol) {
          self.presenter = presenter
          super.init(nibName: nil, bundle: nil)
      }
@@ -72,7 +72,6 @@ final class MemesViewController: UIViewController {
          super.viewDidLoad()
          setupView()
          setupConstraints()
-         presenter.setupView(self)
          presenter.viewDidLoad()
      }
 }
