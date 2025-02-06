@@ -57,8 +57,7 @@ final class MemesPresenter: MemesPresenterProtocol {
             return
         }
         
-        currentMeme = memes.randomElement()
-        loadCurrentMemeImage()
+        getNewMeme()
     }
     
     func likeTapped() {
@@ -66,12 +65,17 @@ final class MemesPresenter: MemesPresenterProtocol {
     }
     
     func dislikeTapped() {
-        
+        getNewMeme()
     }
 }
 
 // MARK: - private Methods
 private extension MemesPresenter {
+    func getNewMeme() {
+        currentMeme = memes.randomElement()
+        loadCurrentMemeImage()
+    }
+    
     func loadMemes() {
         networkService.fetchData { [weak self] result in
             switch result {
