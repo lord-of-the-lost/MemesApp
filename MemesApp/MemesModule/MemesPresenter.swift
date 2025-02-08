@@ -24,7 +24,7 @@ protocol MemesPresenterProtocol {
 
 // MARK: - Presenter
 final class MemesPresenter: MemesPresenterProtocol {
-    weak var view: MemesViewProtocol?
+    private weak var view: MemesViewProtocol?
     private let networkService: NetworkServiceProtocol
     private var memes: [Meme] = []
     private var currentMeme: Meme?
